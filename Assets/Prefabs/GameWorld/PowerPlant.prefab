@@ -49,7 +49,7 @@ MonoBehaviour:
   Icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   Occupies: []
   Position: {x: 0, y: 0, z: 0}
-  Size: {x: 2, y: 3}
+  Size: {x: 2, y: 4}
   BoxCollider: {fileID: 301178575678363601}
   SelectionOverlay: {fileID: 2610697531869295015}
   SpawnPoint: {fileID: 0}

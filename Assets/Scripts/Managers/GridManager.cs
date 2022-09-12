@@ -62,22 +62,23 @@ public class GridManager : MonoBehaviour
 
     public BaseTile GetTile(Vector2 position)
     {
-        return _tileList.Where(t => t.GetPosition().Equals(position)).First();
+        return _tileList.Where(t => Vector2.Distance(t.GetPosition(), position) <= .01f).First();
     }
 
     public List<BaseTile> GetTilesWithinBounds(Bounds bounds)
     {
-
         var list = new List<BaseTile>();
         Vector2 upperRight = new Vector2(bounds.center.x + bounds.extents.x - .16f, bounds.center.y + bounds.extents.y - .16f);
         Vector2 upperLeft = new Vector2(bounds.center.x - bounds.extents.x + .16f, bounds.center.y + bounds.extents.y - .16f);
         Vector2 lowerRight = new Vector2(bounds.center.x + bounds.extents.x - .16f, bounds.center.y - bounds.extents.y + .16f);
         Vector2 lowerLeft = new Vector2(bounds.center.x - bounds.extents.x + .16f, bounds.center.y - bounds.extents.y + .16f);
 
-        for (float x = lowerLeft.x; x < lowerRight.x; x += .32f)
+        for (int i = 0; i < 4; i++)
         {
-            for (float y = lowerLeft.y; y < upperLeft.y; y += .32f)
+            for (int k = 0; k < 4; k++)
             {
+                float x = lowerLeft.x + (i * .32f);
+                float y = lowerLeft.y + (k * .32f);
                 var pos = new Vector2(x, y);
                 var tile = GetTile(pos);
                 if (tile)
@@ -85,34 +86,6 @@ public class GridManager : MonoBehaviour
                     list.Add(tile);
                 }
             }
-        }
-
-        Transform ul = GameObject.CreatePrimitive(PrimitiveType.Cube).transform;
-        Transform ur = GameObject.CreatePrimitive(PrimitiveType.Cube).transform;
-        Transform ll = GameObject.CreatePrimitive(PrimitiveType.Cube).transform;
-        Transform lr = GameObject.CreatePrimitive(PrimitiveType.Cube).transform;
-
-        ul.localScale = ur.localScale = ll.localScale = lr.localScale = Vector3.one * .32f;
-
-        ul.name = "Upper Left";
-        ur.name = "Upper Right";
-        ll.name = "Lower Left";
-        lr.name = "Lower Right";
-
-        ul.position = upperLeft;
-        ur.position = upperRight;
-        ll.position = lowerLeft;
-        lr.position = lowerRight;
-
-
-        // list = _tileList.Where(t =>
-        // (t.GetPosition().x >= lowerLeft.x && t.GetPosition().x <= lowerRight.x) &&
-        // (t.GetPosition().y >= lowerLeft.y && t.GetPosition().y <= upperLeft.y)
-        // ).ToList();
-        foreach (var item in list)
-        {
-            GroundTile t = (GroundTile)item;
-            t.SetColor(Color.black);
         }
         return list;
     }
