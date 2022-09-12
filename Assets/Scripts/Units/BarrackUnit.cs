@@ -8,7 +8,6 @@ public class BarrackBuildingData : BuildingData
 }
 public class BarrackUnit : BaseBuilding
 {
-    [SerializeField] private BaseTile SpawnPoint;
     [SerializeField] private float ProductionTimePerUnit = 1.0f;
     [SerializeField] private int MaxUnitProduced = 10;
     [SerializeField] private List<SoldierUnit> SoldiersToSpawn = new List<SoldierUnit>();
@@ -33,7 +32,9 @@ public class BarrackUnit : BaseBuilding
                 {
                     _totalUnitsProduced++;
                     var soldierToSpawn = SoldiersToSpawn[i];
-                    var soldier = ObjectPoolingManager.Instance.Spawn(soldierToSpawn.gameObject, SpawnPoint.GetPosition(), Quaternion.identity);
+                    var spawnPoint = new Vector3(SpawnPoint.GetPosition().x, SpawnPoint.GetPosition().y, -1);
+                    var soldier = ObjectPoolingManager.Instance.Spawn(soldierToSpawn.gameObject, spawnPoint, Quaternion.identity);
+                    soldier.GetComponent<SoldierUnit>().SetPosition(SpawnPoint.GetPosition());
                     yield return new WaitForSeconds(ProductionTimePerUnit);
                 }
             }
@@ -49,9 +50,9 @@ public class BarrackUnit : BaseBuilding
         };
     }
 
-    public void SetSpawnPoint(BaseTile spawnPoint)
+    public void SetSpawnPoint()
     {
-        SpawnPoint = spawnPoint;
+
     }
 
 }

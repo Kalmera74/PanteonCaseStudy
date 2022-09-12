@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class BuildingData
 
 public abstract class BaseBuilding : BaseUnit
 {
+    [SerializeField] protected BaseTile SpawnPoint;
+
     [SerializeField] protected Transform SpriteRendererTransform;
     [SerializeField] protected string BuildingName;
 
@@ -32,4 +35,11 @@ public abstract class BaseBuilding : BaseUnit
             Icon = this.GetIcon()
         };
     }
+
+    public virtual void SetSpawnPoint(BaseTile spawnPoint)
+    {
+        SpawnPoint = spawnPoint;
+    }
+
+  
 }

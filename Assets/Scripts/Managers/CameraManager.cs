@@ -6,8 +6,10 @@ public class CameraManager : MonoBehaviour
 {
     [SerializeField] private Camera MainCamera;
 
+    public static CameraManager Instance;
     private void Awake()
     {
+        Instance = this;
         if (MainCamera == null)
         {
             MainCamera = Camera.main;

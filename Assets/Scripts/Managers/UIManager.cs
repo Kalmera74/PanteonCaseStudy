@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject ProducedUIPrefab;
     [SerializeField] private Text BuildingNameText;
     [SerializeField] private Image BuildingIcon;
+    [SerializeField] private GameObject InfoParent;
     [SerializeField] private GameObject ProduceParent;
     [SerializeField] private Transform ProduceGridParent;
     [SerializeField] private List<BuildingUI> BuildingUIs = new List<BuildingUI>();
@@ -23,6 +24,10 @@ public class UIManager : MonoBehaviour
         Instance = this;
     }
 
+    public int GetSelectedItemIndex()
+    {
+        return _selectedIndex;
+    }
     public void ShowBuildingUnits(List<BaseBuilding> buildings)
     {
         for (int i = 0; i < buildings.Count; i++)
@@ -38,8 +43,9 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void ShowBuildingInfo(BuildingData data)
+    public void ShowBuildingInfo(BuildingData data)
     {
+        ShowInfoPanel();
         ClearGrid();
         BuildingNameText.text = data.Name;
         BuildingIcon.sprite = data.Icon;
@@ -67,6 +73,15 @@ public class UIManager : MonoBehaviour
 
     }
 
+    private void ShowInfoPanel()
+    {
+        InfoParent.SetActive(true);
+    }
+    public void HideInfoPanel()
+    {
+        InfoParent.SetActive(false);
+    }
+
     private void ClearGrid()
     {
 
@@ -86,8 +101,10 @@ public class UIManager : MonoBehaviour
         _selectedBuildingUI.OnDeselect();
         _selectedBuildingUI = BuildingUIs[index];
         _selectedIndex = index;
-        ShowBuildingInfo(_selectedBuildingUI.GetData());
+        HideInfoPanel();
         _selectedBuildingUI.OnSelected();
+        UnitManager.Instance.DeselectSelectedUnit();
+        GameManager.Instance.SetState(GameState.BuildingSelectedToSpawn);
 
     }
     public void SpawnBuilding(BaseTile selectedTile)
@@ -97,6 +114,7 @@ public class UIManager : MonoBehaviour
 
             UnitManager.Instance.SpawnBuilding(selectedTile, _selectedIndex);
             DeselectBuildingUI();
+            GameManager.Instance.SetState(GameState.BuildingSpawned);
         }
     }
     private void DeselectBuildingUI()

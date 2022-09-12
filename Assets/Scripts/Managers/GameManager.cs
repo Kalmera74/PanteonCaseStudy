@@ -6,16 +6,22 @@ public enum GameState
     Init,
     GenerateGrid,
     AdjustCamera,
+    BuildingSelectedToSpawn,
+    BuildingSpawned,
+    UnitSelected,
+    TileSelected,
     Idle,
 }
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameState GameState;
-    [SerializeField] private GridManager GridManager;
-    [SerializeField] private UnitManager UnitManager;
-    [SerializeField] private UIManager UIManager;
-    [SerializeField] private CameraManager CameraManager;
 
+
+    public static GameManager Instance;
+    private void Awake()
+    {
+        Instance = this;
+    }
     private void Update()
     {
         StateMachine();
@@ -37,15 +43,52 @@ public class GameManager : MonoBehaviour
             case GameState.Idle:
                 IdleState();
                 break;
+            case GameState.BuildingSelectedToSpawn:
+                BuildingSelectedToSpawnState();
+                break;
+            case GameState.BuildingSpawned:
+                BuildingSpawnedState();
+                break;
+            case GameState.UnitSelected:
+                UnitSelectedState();
+                break;
+            case GameState.TileSelected:
+                TileSelectedUnit();
+                break;
             default:
                 break;
         }
     }
 
+    internal GameState GetState()
+    {
+        return GameState;
+    }
+
+    private void TileSelectedUnit()
+    {
+
+    }
+
+    private void UnitSelectedState()
+    {
+
+    }
+
+    private void BuildingSpawnedState()
+    {
+
+    }
+
+    private void BuildingSelectedToSpawnState()
+    {
+
+    }
+
     private void PopulateBuildingsUI()
     {
-        var buildingList = UnitManager.GetBuildingsList();
-        UIManager.ShowBuildingUnits(buildingList);
+        var buildingList = UnitManager.Instance.GetBuildingsList();
+        UIManager.Instance.ShowBuildingUnits(buildingList);
     }
 
     private void IdleState()
@@ -55,13 +98,13 @@ public class GameManager : MonoBehaviour
 
     private void AdjustCameraState()
     {
-        var bounds = GridManager.GetBounds();
-        CameraManager.AdjustCamera(bounds);
+        var bounds = GridManager.Instance.GetBounds();
+        CameraManager.Instance.AdjustCamera(bounds);
     }
 
     private void GenerateGridState()
     {
-        GridManager.GenerateGrid();
+        GridManager.Instance.GenerateGrid();
         SetState(GameState.AdjustCamera);
     }
 
