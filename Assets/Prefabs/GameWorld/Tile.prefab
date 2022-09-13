@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4a8f992e0e2c794991ce7ae502c8d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsWalkable: 0
+  IsWalkable: 1
   OccupiedBy: {fileID: 0}
   Position: {x: 0, y: 0}
   TileRenderer: {fileID: 8935203900580683575}

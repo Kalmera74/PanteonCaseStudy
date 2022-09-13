@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class PowerPlantUnit : BaseBuilding
+using Scripts.Bases;
+namespace Scripts.Units
 {
+    public class PowerPlantUnit : BaseBuilding
+    {
 
+    }
 }

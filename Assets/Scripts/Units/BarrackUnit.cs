@@ -1,57 +1,80 @@
 using System.Collections;
 using System.Collections.Generic;
+using Scripts.Bases;
+using Scripts.Managers;
+using System.Linq;
 using UnityEngine;
 
-public class BarrackBuildingData : BuildingData
+namespace Scripts.Units
 {
-    public List<SoldierUnit> Units;
-}
-public class BarrackUnit : BaseBuilding
-{
-    [SerializeField] private float ProductionTimePerUnit = 1.0f;
-    [SerializeField] private int MaxUnitProduced = 10;
-    [SerializeField] private List<SoldierUnit> SoldiersToSpawn = new List<SoldierUnit>();
 
-    public int _totalUnitsProduced = 0;
-    private void Start()
+    public class BarrackBuildingData : BuildingData
     {
-        StartCoroutine(ProduceUnits());
+        public List<SoldierUnit> Units;
     }
-    private IEnumerator ProduceUnits()
+    public class BarrackUnit : BaseBuilding
     {
-        while (true)
-        {
+        [SerializeField] private float ProductionTimePerUnit = 1.0f;
+        [SerializeField] private int MaxUnitProduced = 10;
+        [SerializeField] private List<SoldierUnit> SoldiersToSpawn = new List<SoldierUnit>();
 
-            for (int i = 0; i < SoldiersToSpawn.Count; i++)
+        public int _totalUnitsProduced = 0;
+        private void Start()
+        {
+            StartCoroutine(ProduceUnits());
+        }
+        private IEnumerator ProduceUnits()
+        {
+            while (true)
             {
-                if (_totalUnitsProduced >= MaxUnitProduced)
+
+                for (int i = 0; i < SoldiersToSpawn.Count; i++)
                 {
-                    yield break;
-                }
-                else
-                {
-                    _totalUnitsProduced++;
-                    var soldierToSpawn = SoldiersToSpawn[i];
-                    var spawnPoint = new Vector3(SpawnPoint.GetPosition().x, SpawnPoint.GetPosition().y, -1);
-                    var soldier = ObjectPoolingManager.Instance.Spawn(soldierToSpawn.gameObject, spawnPoint, Quaternion.identity);
-                    soldier.GetComponent<SoldierUnit>().SetPosition(SpawnPoint.GetPosition());
-                    yield return new WaitForSeconds(ProductionTimePerUnit);
+                    if (_totalUnitsProduced >= MaxUnitProduced)
+                    {
+                        yield break;
+                    }
+                    else
+                    {
+                        _totalUnitsProduced++;
+                        var soldierToSpawn = SoldiersToSpawn[i];
+                        var spawnPoint = new Vector3(SpawnPoint.GetPosition().x, SpawnPoint.GetPosition().y, -1);
+                        var soldier = ObjectPoolingManager.Instance.Spawn(soldierToSpawn.gameObject, spawnPoint, Quaternion.identity).GetComponent<SoldierUnit>();
+                        soldier.SetPosition(GetPatrolTile());
+                        yield return new WaitForSeconds(ProductionTimePerUnit);
+                    }
                 }
             }
         }
-    }
-    public override BuildingData GetBuildingData()
-    {
-        return new BarrackBuildingData
-        {
-            Name = this.BuildingName,
-            Icon = this.GetIcon(),
-            Units = this.SoldiersToSpawn
-        };
-    }
 
-    public void SetSpawnPoint()
-    {
+        private BaseTile GetPatrolTile()
+        {
+            var random = new System.Random();
+
+            var tile = GetOccupiedTiles().OrderBy(e => random.Next()).Take(1).First();
+
+            var offsetX = UnityEngine.Random.Range(0, 2);
+            var offsetY = UnityEngine.Random.Range(0, 2);
+
+            var pos = new Vector2(offsetX * .32f, offsetY * .32f) + tile.GetPosition();
+
+
+            var newTile = GridManager.Instance.GetTile(pos);
+            if (newTile)
+            {
+                return newTile;
+            }
+            return tile;
+        }
+        public override BuildingData GetBuildingData()
+        {
+            return new BarrackBuildingData
+            {
+                Name = this.BuildingName,
+                Icon = this.GetIcon(),
+                Units = this.SoldiersToSpawn
+            };
+        }
 
     }
 

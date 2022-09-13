@@ -1,121 +1,121 @@
-using System;
 using UnityEngine;
-
-public enum GameState
+namespace Scripts.Managers
 {
-    Init,
-    GenerateGrid,
-    AdjustCamera,
-    BuildingSelectedToSpawn,
-    BuildingSpawned,
-    UnitSelected,
-    TileSelected,
-    Idle,
-}
-public class GameManager : MonoBehaviour
-{
-    [SerializeField] private GameState GameState;
 
-
-    public static GameManager Instance;
-    private void Awake()
+    public enum GameState
     {
-        Instance = this;
+        Init,
+        GenerateGrid,
+        AdjustCamera,
+        BuildingSelectedToSpawn,
+        BuildingSpawned,
+        UnitSelected,
+        TileSelected,
+        Idle,
     }
-    private void Update()
+    public class GameManager : MonoBehaviour
     {
-        StateMachine();
-    }
-
-    private void StateMachine()
-    {
-        switch (GameState)
+        [SerializeField] private GameState GameState;
+        public static GameManager Instance;
+        private void Awake()
         {
-            case GameState.Init:
-                InitState();
-                break;
-            case GameState.GenerateGrid:
-                GenerateGridState();
-                break;
-            case GameState.AdjustCamera:
-                AdjustCameraState();
-                break;
-            case GameState.Idle:
-                IdleState();
-                break;
-            case GameState.BuildingSelectedToSpawn:
-                BuildingSelectedToSpawnState();
-                break;
-            case GameState.BuildingSpawned:
-                BuildingSpawnedState();
-                break;
-            case GameState.UnitSelected:
-                UnitSelectedState();
-                break;
-            case GameState.TileSelected:
-                TileSelectedUnit();
-                break;
-            default:
-                break;
+            Instance = this;
         }
-    }
+        private void Update()
+        {
+            StateMachine();
+        }
 
-    internal GameState GetState()
-    {
-        return GameState;
-    }
+        private void StateMachine()
+        {
+            switch (GameState)
+            {
+                case GameState.Init:
+                    InitState();
+                    break;
+                case GameState.GenerateGrid:
+                    GenerateGridState();
+                    break;
+                case GameState.AdjustCamera:
+                    AdjustCameraState();
+                    break;
+                case GameState.Idle:
+                    IdleState();
+                    break;
+                case GameState.BuildingSelectedToSpawn:
+                    BuildingSelectedToSpawnState();
+                    break;
+                case GameState.BuildingSpawned:
+                    BuildingSpawnedState();
+                    break;
+                case GameState.UnitSelected:
+                    UnitSelectedState();
+                    break;
+                case GameState.TileSelected:
+                    TileSelectedUnit();
+                    break;
+                default:
+                    break;
+            }
+        }
 
-    private void TileSelectedUnit()
-    {
+        internal GameState GetState()
+        {
+            return GameState;
+        }
 
-    }
+        private void TileSelectedUnit()
+        {
 
-    private void UnitSelectedState()
-    {
+        }
 
-    }
+        private void UnitSelectedState()
+        {
 
-    private void BuildingSpawnedState()
-    {
+        }
 
-    }
+        private void BuildingSpawnedState()
+        {
 
-    private void BuildingSelectedToSpawnState()
-    {
+        }
 
-    }
+        private void BuildingSelectedToSpawnState()
+        {
 
-    private void PopulateBuildingsUI()
-    {
-        var buildingList = UnitManager.Instance.GetBuildingsList();
-        UIManager.Instance.ShowBuildingUnits(buildingList);
-    }
+        }
 
-    private void IdleState()
-    {
+        private void PopulateBuildingsUI()
+        {
+            var buildingList = UnitManager.Instance.GetBuildingsList();
+            UIManager.Instance.ShowBuildingUnits(buildingList);
+        }
 
-    }
+        private void IdleState()
+        {
 
-    private void AdjustCameraState()
-    {
-        var bounds = GridManager.Instance.GetBounds();
-        CameraManager.Instance.AdjustCamera(bounds);
-    }
+        }
 
-    private void GenerateGridState()
-    {
-        GridManager.Instance.GenerateGrid();
-        SetState(GameState.AdjustCamera);
-    }
+        private void AdjustCameraState()
+        {
+            var bounds = GridManager.Instance.GetBounds();
+            CameraManager.Instance.AdjustCamera(bounds);
+        }
 
-    private void InitState()
-    {
-        PopulateBuildingsUI();
-        SetState(GameState.GenerateGrid);
-    }
+        private void GenerateGridState()
+        {
+            GridManager.Instance.GenerateGrid();
+            SetState(GameState.AdjustCamera);
+        }
 
-    public void SetState(GameState state)
-    {
-        GameState = state;
+        private void InitState()
+        {
+            PopulateBuildingsUI();
+            SetState(GameState.GenerateGrid);
+        }
+
+        public void SetState(GameState state)
+        {
+            GameState = state;
+        }
     }
 }

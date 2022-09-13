@@ -1,7 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+
+namespace Scripts.Bases
+{
 
 public abstract class BaseTile : MonoBehaviour
 {
@@ -34,4 +35,5 @@ public abstract class BaseTile : MonoBehaviour
     {
         return OccupiedBy;
     }
+}
 }

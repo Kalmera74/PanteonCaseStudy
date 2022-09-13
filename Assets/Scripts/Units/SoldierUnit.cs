@@ -1,42 +1,47 @@
 using System.Collections;
-using System.Collections.Generic;
+using Scripts.Bases;
 using UnityEngine;
 
-public class SoldierUnit : BaseUnit
+namespace Scripts.Units
 {
-
-
-    public void MoveTo(BaseTile tile)
+    public class SoldierUnit : BaseUnit
     {
 
-        SetPosition(tile.GetPosition());
 
-    }
-
-    public override void SetPosition(Vector2 position)
-    {
-        base.SetPosition(position);
-        StartCoroutine(Move(transform.position, position));
-    }
-
-    private IEnumerator Move(Vector3 from, Vector3 to)
-    {
-        float t = Time.time;
-        from.z = to.z = -1;
-
-        while (Time.time - t < 1f)
+        public void MoveTo(BaseTile tile)
         {
-            transform.position = Vector3.Lerp(from, to, Time.time - t);
-            yield return null;
+
+            SetPosition(tile);
+
         }
-        HideSelection();
-    }
 
-    protected override void OnMouseOver()
-    {
-        if (Input.GetMouseButton(1))
+        public override void SetPosition(BaseTile tile)
         {
-            OnSelection();
+            base.SetPosition(tile);
+            StartCoroutine(Move(transform.position, tile));
+        }
+
+        private IEnumerator Move(Vector3 from, BaseTile target)
+        {
+            float t = Time.time;
+            Vector3 to = target.GetPosition();
+            from.z = to.z = -1;
+
+            while (Time.time - t < 1f)
+            {
+                transform.position = Vector3.Lerp(from, to, Time.time - t);
+                yield return null;
+            }
+            target.SetOccupier(this);
+            HideSelection();
+        }
+
+        protected override void OnMouseOver()
+        {
+            if (Input.GetMouseButton(1))
+            {
+                OnSelection();
+            }
         }
     }
 }
